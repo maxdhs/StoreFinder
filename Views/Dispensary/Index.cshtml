@@ -1,0 +1,17 @@
+@{
+  Layout = "_Layout";
+}
+
+<h1>All the dispensaries:</h1>
+<br>
+<form action='/dispensaries/searchbyname' method='post'>
+  <label for='Name'>Search by Dispensary name: </label>
+  <input id='DispensaryName' name='DispensaryName' type='text'>
+  <button type='submit'>Search</button>
+</form>
+<br>
+
+@foreach(var dispensary in Model)
+{
+    <li><a href="/dispensaries/@dispensary.GetLicense()">@dispensary.GetName()</li>
+}
