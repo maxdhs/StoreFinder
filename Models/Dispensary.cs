@@ -9,13 +9,25 @@ namespace Weed.Models
     {
         private int _license;
         private string _name;
+        private string _city;
         private string _address;
 
- 
+    // public static int GetViolationsByLicense(int license)
+    // {
+    //     return 
+    // }
+
     public Dispensary(string name, string address, int license = 0)
     {
         _name = name;
         _address = address;
+        _license = license;
+    }
+    public Dispensary(string name, string address, string city, int license = 0)
+    {
+        _name = name;
+        _address = address;
+        _city = city;
         _license = license;
     }
 
@@ -39,6 +51,11 @@ namespace Weed.Models
         return _address;
     }
 
+    public string GetCity()
+    {
+        return _city;
+    }
+
     public static List<Dispensary> GetAll()
         {
             List<Dispensary> allDispensarys = new List<Dispensary> {};
@@ -52,8 +69,9 @@ namespace Weed.Models
                 int license = rdr.GetInt32(2);
                 string name = rdr.GetString(0);
                 string address = rdr.GetString(5);
+                string city = rdr.GetString(7);
                 
-                Dispensary newDispensary = new Dispensary(name, address, license);
+                Dispensary newDispensary = new Dispensary(name, address, city, license);
                 allDispensarys.Add(newDispensary);
             }
             conn.Close();
@@ -62,6 +80,31 @@ namespace Weed.Models
                 conn.Dispose();
             }
             return allDispensarys;
+        }
+    public static List<Dispensary> GetAddresses(string cityName)
+        {
+            List<Dispensary> allAddresses = new List<Dispensary> {};
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"SELECT * FROM dispensaries WHERE City=@cityName;";
+            cmd.Parameters.AddWithValue("@cityName", cityName);
+            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+            while(rdr.Read())
+            {
+                int license = rdr.GetInt32(2);
+                string name = rdr.GetString(0);
+                string address = rdr.GetString(5);
+                string city = rdr.GetString(7);
+                Dispensary newAddress = new Dispensary(name, address, city, license);
+                allAddresses.Add(newAddress);
+            }
+            conn.Close();
+            if (conn !=null)
+            {
+                conn.Dispose();
+            }
+            return allAddresses;
         }
 
         public static Dispensary FindByLicense(int license)
@@ -85,7 +128,7 @@ namespace Weed.Models
             {
                 DispensaryLicense = rdr.GetInt32(2);
                 DispensaryName = rdr.GetString(0);
-                DispensaryAddress = rdr.GetString(5) + " " + rdr.GetString(6) + "," + rdr.GetString(7) + ", " + rdr.GetString(8) + " " + rdr.GetInt32(10);
+                DispensaryAddress = rdr.GetString(5) + " " + rdr.GetString(6) + ", " + rdr.GetString(7) + ", " + rdr.GetString(8) + ", " + rdr.GetString(9);
             }
 
             Dispensary newDispensary = new Dispensary(DispensaryName, DispensaryAddress, DispensaryLicense);

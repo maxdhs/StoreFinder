@@ -9,8 +9,13 @@ namespace Weed.Controllers
         [HttpGet("/dispensaries")]
         public ActionResult Index()
         {
+            string cityName ="Seattle";
+            Dictionary<string,object> model = new Dictionary<string,object>{};
             List<Dispensary> allDispensaries = Dispensary.GetAll();
-            return View(allDispensaries);
+            List<Dispensary> allAddresses = Dispensary.GetAddresses(cityName);
+            model.Add("dispensaries", allDispensaries);
+            model.Add("addresses", allAddresses);
+            return View(model);
         }
 
         [HttpGet("/dispensaries/{id}")]

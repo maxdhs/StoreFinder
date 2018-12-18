@@ -1,17 +1,94 @@
 @{
   Layout = "_Layout";
 }
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    
+    <script src="http://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="http://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+    <script src="http://js.api.here.com/v3/3.0/mapsjs-mapevents.js" type="text/javascript" charset="utf-8"></script>
+    <script src="http://js.api.here.com/v3/3.0/mapsjs-ui.js" type="text/javascript" charset="utf-8"></script>
+    <script src="http://js.api.here.com/v3/3.0/mapsjs-pano.js" type="text/javascript" charset="utf-8"></script>
+    <script src="http://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+    
+    <link rel="stylesheet" type="text/css" href="http://js.api.here.com/v3/3.0/mapsjs-ui.css" />
+    <link rel="stylesheet" href="~/css/styles.css">
 
+
+  </head>
+  <body>
 <h1>All the dispensaries:</h1>
 <br>
-<form action='/dispensaries/searchbyname' method='post'>
-  <label for='Name'>Search by Dispensary name: </label>
-  <input id='DispensaryName' name='DispensaryName' type='text'>
-  <button id="searchDis" type='submit'>Search</button>
-</form>
-<br>
 
-@foreach(var dispensary in Model)
-{
-    <li><a href="/dispensaries/@dispensary.GetLicense()">@dispensary.GetName()</li>
-}
+<div class="row">
+
+  <div class="col-md-5">
+     <div style="width: 640px; height: 480px" id="mapContainer"></div>
+  <script src="~/js/scripts.js"></script>
+  <script>  
+      var icon = new H.map.Icon('/img/pin1.png');
+      @foreach(var address in @Model["addresses"])
+      {
+        <text>
+          var geocodingParams = {
+          searchText: '@(address.GetAddress()), @(address.GetCity()), WA'
+        };
+        addressFinder(geocodingParams);
+        </text>
+      }
+      
+    function addressFinder(geocodingParams){
+        // Define a callback function to process the geocoding response:
+        var onResult = function(result) {
+          var locations = result.Response.View[0].Result,
+            position,
+            marker;
+          // Add a marker for each location found
+          for (i = 0;  i < locations.length; i++) {
+          position = {
+            lat: locations[i].Location.DisplayPosition.Latitude,
+            lng: locations[i].Location.DisplayPosition.Longitude
+          };
+          marker = new H.map.Marker(position, {icon: icon});
+          map.addObject(marker);
+          }
+        };
+    
+        var geocoder = platform.getGeocodingService();
+        // Call the geocode method with the geocoding parameters,
+        // the callback and an error callback function (called if a
+        // communication error occurs):
+        geocoder.geocode(geocodingParams, onResult, function(e) {
+          alert(e);
+        });
+      };
+    </script>
+  </div>
+
+
+
+ 
+    <form action='/dispensaries/searchbyname' method='post'>
+      <label for='Name'>Search by Dispensary name: </label>
+      <input id='DispensaryName' name='DispensaryName' type='text'>
+      <button type='submit'>Search</button>
+    </form>
+    <br>
+     <div class="col-md-5">
+    <ul>
+    @foreach(var address in @Model["addresses"])
+    {
+      <li>@address.GetAddress()</li>
+    }
+    </ul>
+    @foreach(var dispensary in Model["dispensaries"])
+    {
+        <li><a href="/dispensaries/@dispensary.GetLicense()">@dispensary.GetName()</li>
+    }
+  </div>
+
+ </div>
+  </body>
+</html>
+
