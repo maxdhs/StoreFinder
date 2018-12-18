@@ -6,7 +6,8 @@ body
 
 img
 {
-    width: 20%;
+ width: 20%;
+ position: center;
     
 }
 
@@ -15,3 +16,13 @@ img
     float: left;
 }
 
+textarea
+{
+    width: 400px;
+    height: 100px;
+}
+
+h1 
+{
+    color: rgb(126, 179, 126);
+}

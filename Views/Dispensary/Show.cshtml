@@ -1,24 +1,49 @@
 @{
   Layout = "_Layout";
 }
+
 <br>
-<h1>Dispensary details:</h1>
-<li>Name: @Model.GetName()</li>
-<li>License: @Model.GetLicense()</li>
-<li>Address: @Model.GetAddress()</li>
+<h1>Dispensary Details:</h1>
+<li>Name: @Model["dispensary"].GetName()</li>
+<li>License: @Model["dispensary"].GetLicense()</li>
+<li>Address: @Model["dispensary"].GetAddress()</li>
 
 <hr>
-<h3>Visited @Model.GetName()? Leave your review: </h3>
+<h3>Visited @Model["dispensary"].GetName()? Leave your review: </h3>
 
-<form action='/dispensaries/comments' method='post'>
-  <label for='review'>review: </label>
-  <input id='review' name='review' type='text'>
+<form action='/dispensaries/@Model["dispensary"].GetLicense()/comments' method='post'>
+  <textarea id='review' name='review' type='text' required></textarea>
 
-  <label for='author'>Author: </label>
-  <input id='author' name='author' type='text'>
+<div class="radio">
+  <label>
+    <input type="radio" name="rating" value="1" checked>
+    🌿
+  </label>
+    <label>
+    <input type="radio" name="rating" value="2" checked>
+    🌿🌿
+  </label>
+  <label>
+    <input type="radio" name="rating" value="3" checked>
+    🌿🌿🌿
+  </label>
+  <label>
+    <input type="radio" name="rating" value="4" checked>
+    🌿🌿🌿🌿
+  </label>
+  <label>
+    <input type="radio" name="rating" value="5" checked>
+    🌿🌿🌿🌿🌿🌿
+  </label>
+</div>
 
-  <label for='copies'>Number of Copies: </label>
-  <input id='copies' name='copies' type='text'>
-  
-  <button type='submit'>Add Book</button>
+  <button type='submit'>Add Review</button>
 </form>
+
+<hr>
+<h3>Patron reviews: </h3>
+@foreach(var comment in Model["comments"])
+{
+    <li class="commentsList">@comment.GetStars()/5 Stars - @comment.GetDescription()</li>
+}
+  
