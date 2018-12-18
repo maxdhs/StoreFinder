@@ -11,11 +11,7 @@ namespace Weed.Models
         private string _name;
         private string _address;
 
-    // public static int GetViolationsByLicense(int license)
-    // {
-    //     return 
-    // }
-
+ 
     public Dispensary(string name, string address, int license = 0)
     {
         _name = name;
@@ -89,7 +85,7 @@ namespace Weed.Models
             {
                 DispensaryLicense = rdr.GetInt32(2);
                 DispensaryName = rdr.GetString(0);
-                DispensaryAddress = rdr.GetString(5) + " " + rdr.GetString(6) + ", " + rdr.GetString(7) + ", " + rdr.GetString(8) + ", " + rdr.GetString(9);
+                DispensaryAddress = rdr.GetString(5) + " " + rdr.GetString(6) + "," + rdr.GetString(7) + ", " + rdr.GetString(8) + " " + rdr.GetInt32(10);
             }
 
             Dispensary newDispensary = new Dispensary(DispensaryName, DispensaryAddress, DispensaryLicense);

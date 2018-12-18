@@ -1,5 +1,24 @@
-<h1>Dispensary details:<h1>
+@{
+  Layout = "_Layout";
+}
+<br>
+<h1>Dispensary details:</h1>
 <li>Name: @Model.GetName()</li>
 <li>License: @Model.GetLicense()</li>
 <li>Address: @Model.GetAddress()</li>
 
+<hr>
+<h3>Visited @Model.GetName()? Leave your review: </h3>
+
+<form action='/dispensaries/comments' method='post'>
+  <label for='review'>review: </label>
+  <input id='review' name='review' type='text'>
+
+  <label for='author'>Author: </label>
+  <input id='author' name='author' type='text'>
+
+  <label for='copies'>Number of Copies: </label>
+  <input id='copies' name='copies' type='text'>
+  
+  <button type='submit'>Add Book</button>
+</form>
