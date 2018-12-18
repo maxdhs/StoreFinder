@@ -23,6 +23,11 @@ namespace Weed.Models
         _license = license;
     }
 
+    public Dispensary(int license = 0)
+    {
+        _license = license;
+    }
+
     public string GetName()
     {
         return _name;
@@ -128,6 +133,5 @@ namespace Weed.Models
             }
             return newDispensary;
         }
-
     }
 }
