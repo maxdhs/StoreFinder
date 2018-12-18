@@ -1,0 +1,26 @@
+@{
+  Layout = "_Layout";
+}
+
+<h3>Here are all the dispensaries in the @Model["city"] area</h3>
+@if(Model["dispensaries"].Count == 0){
+<h2>This is not a city in the state of Washington</h2>
+   <form action='/dispensaries/searchbycity' method='post'>
+      <label for='city'>Search by your city: </label>
+      <input id='city' name='city' type='text'>
+      <button type='submit'>Search</button>
+    </form>
+}
+<ul>
+@foreach(var city in Model["dispensaries"])
+
+{
+    <li><a href="/dispensaries/@city.GetLicense()"> @city.GetName()</a></li>
+}
+</ul>
+
+  <form action='/dispensaries/searchbycity' method='post'>
+      <label for='city'>Search by your city: </label>
+      <input id='city' name='city' type='text'>
+      <button type='submit'>Search</button>
+    </form>

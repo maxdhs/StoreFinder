@@ -172,5 +172,45 @@ namespace Weed.Models
             }
             return newDispensary;
         }
+
+        public static List<Dispensary> FindByCity(string city)
+         {
+             List<Dispensary> allDispensaries = new List<Dispensary> {};
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            var cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"SELECT * FROM dispensaries WHERE City = (@searchCity);";
+            MySqlParameter searchCity = new MySqlParameter();
+            searchCity.ParameterName = "@searchCity";
+            searchCity.Value = city;
+            cmd.Parameters.Add(searchCity);
+            var rdr = cmd.ExecuteReader() as MySqlDataReader;
+
+            
+            string DispensaryName = "No Matches Found!";
+            string DispensaryAddress = "";
+            string DispensaryCity = "Seattle, Wa";
+            int License = 0;
+            
+
+            while(rdr.Read())
+            {
+                
+                DispensaryName = rdr.GetString(0);
+                DispensaryAddress = rdr.GetString(5);
+                DispensaryCity = rdr.GetString(8);
+                License = rdr.GetInt32(2);
+                Dispensary newDispensary = new Dispensary(DispensaryName, DispensaryAddress, DispensaryCity, License);
+                allDispensaries.Add(newDispensary);
+            }
+
+           
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+            return allDispensaries;
+        }
     }
 }
